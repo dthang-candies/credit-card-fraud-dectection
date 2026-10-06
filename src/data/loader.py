@@ -43,10 +43,14 @@ def load_raw_data(
 
     file_path = base_dir / filename
     if not file_path.exists():
-        raise FileNotFoundError(
-            f"Dataset file not found at: {file_path}. "
-            f"Available files in {base_dir}: {[f.name for f in base_dir.glob('*.csv')]}"
-        )
+        zip_candidate = base_dir / f"{filename}.zip"
+        if zip_candidate.exists():
+            file_path = zip_candidate
+        else:
+            raise FileNotFoundError(
+                f"Dataset file not found at: {file_path}. "
+                f"Available files in {base_dir}: {[f.name for f in base_dir.iterdir() if f.is_file()]}"
+            )
 
     if verbose:
         print(f"[DataLoader] Đang đọc dữ liệu từ: {file_path.relative_to(PROJECT_ROOT)}")

@@ -15,16 +15,15 @@ env/
 *.swp
 .DS_Store
 
-# Data files exceeding GitHub 100MB limit
+# Data files exceeding GitHub 100MB limit (compressed .zip versions are tracked instead)
 data/raw/creditcard.csv
 data/processed/creditcard/X_train.csv
 data/processed/creditcard/train.csv
-data/processed/creditcard/X_test.csv
-data/processed/creditcard/test.csv
-data/processed/creditcard/X_val.csv
-data/processed/creditcard/val.csv
 
 # Large results or checkpoints if any
 *.joblib
 *.npz
 *.tar.gz
+
+# Exclude PDF documents from git
+*.pdf

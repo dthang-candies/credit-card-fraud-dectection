@@ -55,16 +55,21 @@ from src.evaluation.metrics import (
 
 def load_processed_splits(dataset_name: str = "banksim"):
     data_dir = PROJECT_ROOT / "data" / "processed" / dataset_name.lower()
-    if not (data_dir / "X_train.csv").exists():
-        raise FileNotFoundError(
-            f"Chưa tìm thấy dữ liệu đã xử lý tại {data_dir}. "
-            f"Vui lòng chạy 'python -m src.data.run_pipeline --dataset {dataset_name}' trước."
-        )
 
-    X_train = pd.read_csv(data_dir / "X_train.csv").values
-    y_train = pd.read_csv(data_dir / "y_train.csv").squeeze().values
-    X_test = pd.read_csv(data_dir / "X_test.csv").values
-    y_test = pd.read_csv(data_dir / "y_test.csv").squeeze().values
+    def _read_file(base_name: str) -> pd.DataFrame:
+        csv_file = data_dir / base_name
+        zip_file = data_dir / f"{base_name}.zip"
+        if csv_file.exists():
+            return pd.read_csv(csv_file)
+        elif zip_file.exists():
+            return pd.read_csv(zip_file)
+        else:
+            raise FileNotFoundError(f"Không tìm thấy {base_name} hoặc {zip_file} trong {data_dir}")
+
+    X_train = _read_file("X_train.csv").values
+    y_train = _read_file("y_train.csv").squeeze().values
+    X_test = _read_file("X_test.csv").values
+    y_test = _read_file("y_test.csv").squeeze().values
 
     return X_train, y_train, X_test, y_test
 
